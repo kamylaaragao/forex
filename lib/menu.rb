@@ -49,6 +49,8 @@ class Menu
         else
           puts 'Operacao cancelada'
         end
+      elsif option == 5
+        puts balance.transactions
       else
         print 'Opção invalida'
       end

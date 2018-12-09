@@ -8,4 +8,8 @@ class Transaction
     @total_usd = total_usd
     @id = id
   end
+
+  def to_s
+    "ID: #{@id}; type: #{@type}; currency: #{@currency}; total USD: #{@total_usd}; total BRL: #{@total_usd * @price}"
+  end
 end

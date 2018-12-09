@@ -12,6 +12,7 @@ class Balance
     puts 'Reais disponíveis no caixa: '
     @balance_r = gets.to_f
     @transaction_count = 0
+    @transactions = []
   end
 
   def dollar_to_real(value)
@@ -27,6 +28,7 @@ class Balance
     @balance_r += real
     @transaction_count += 1
     @active_transaction = Transaction.new(type, currency, @price, dollar, @transaction_count)
+    @transactions << @active_transaction
     puts 'Operacao confirmada!'
   end
 
@@ -35,6 +37,7 @@ class Balance
     @balance_r -= real
     @transaction_count += 1
     @active_transaction = Transaction.new(type, currency, @price, dollar, @transaction_count)
+    @transactions << @active_transaction
     puts 'Operacao confirmada!'
   end
 
