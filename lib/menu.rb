@@ -16,7 +16,7 @@ class Menu
   def self.start
     Balance.open_balance
     option = menu
-    while option != 7 do
+    while option != 7
       puts "Opção escolhida: #{option}"
       r = nil
       if option > 0 && option < 5
@@ -44,7 +44,7 @@ class Menu
         end
         puts 'deseja confirmar a operação? [s/n]'
         r = gets.chomp
-        if (r == 's')
+        if r == 's'
           Balance.confirm_transaction(type, currency, dollar, real)
         else
           puts 'operacao cancelada'
@@ -55,5 +55,4 @@ class Menu
       option = menu
     end
   end
-
 end

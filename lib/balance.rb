@@ -13,11 +13,11 @@ class Balance
     @balance_r = gets.to_f
   end
 
-  def self.dollar_to_real (value)
+  def self.dollar_to_real(value)
     value * @price
   end
 
-  def self.real_to_dollar (value)
+  def self.real_to_dollar(value)
     value / @price
   end
 
@@ -47,7 +47,7 @@ class Balance
     elsif currency == 'BRL'
       if type == 'venda' && dollar <= @balance_d
         change_dollar(type, currency, dollar, real)
-     elsif type == 'compra' && real <= @balance_r
+      elsif type == 'compra' && real <= @balance_r
         change_real(type, currency, dollar, real)
       else
         puts 'Saldo insuficiente em caixa'
@@ -56,5 +56,4 @@ class Balance
     puts "real disponivel no caixa #{@balance_r}"
     puts "dolar disponivel no caixa #{@balance_d} "
   end
-
 end
