@@ -51,6 +51,9 @@ class Menu
         end
       elsif option == 5
         puts balance.transactions
+      elsif option == 6
+        puts "total USD no caixa: #{balance.balance_d}"
+        puts "total BRL no caixa: #{balance.balance_r}"
       else
         print 'Opção invalida'
       end
