@@ -11,7 +11,7 @@ def user_input(stdout, stdin, input)
 end
 
 RSpec.describe 'command line interface integration test' do
-  context 'buying dollars' do
+  context 'buying USD' do
     PTY.spawn('./cli') do |stdout, stdin|
       response = read_nth_line(stdout, 2)
 
@@ -45,6 +45,51 @@ RSpec.describe 'command line interface integration test' do
         expect(response).to include 'Informe o valor da transação'
         response = user_input(stdout, stdin, '5')
         expect(response).to include 'BRL 16'
+      end
+
+      it 'cashier confirms the operation' do
+        response = read_nth_line(stdout, 1)
+        expect(response).to include 'Deseja confirmar a operação? [s/n]'
+        response = user_input(stdout, stdin, 's')
+        expect(response).to include 'Operacao confirmada!'
+      end
+    end
+  end
+
+  context 'buying BRL' do
+    PTY.spawn('./cli') do |stdout, stdin|
+      response = read_nth_line(stdout, 2)
+
+      it 'prompts cashier for the daily fx rate' do
+        expect(response).to include 'Cotação do dólar em reais'
+        response = user_input(stdout, stdin, '3.2')
+      end
+
+      it 'prompts cashier for the USD balance' do
+        expect(response).to include 'Dolares disponíveis no caixa'
+        response = user_input(stdout, stdin, '100')
+      end
+
+      it 'prompts cashier for the BRL balance' do
+        expect(response).to include 'Reais disponíveis no caixa'
+        response = user_input(stdout, stdin, '400')
+      end
+
+      it 'provides cashier a numbered menu of choices' do
+        expect(response).to include 'Escolha uma opção no menu'
+        read_nth_line(stdout, 7)
+      end
+
+      it 'cashier chooses option 3, buying BRL' do
+        response = user_input(stdout, stdin, '3')
+        expect(response).to include 'Opção escolhida: 3'
+      end
+
+      it 'cashier provides the number of BRL to buy' do
+        response = read_nth_line(stdout, 1)
+        expect(response).to include 'Informe o valor da transação'
+        response = user_input(stdout, stdin, '5')
+        expect(response).to include 'USD 1.5625'
       end
 
       it 'cashier confirms the operation' do
