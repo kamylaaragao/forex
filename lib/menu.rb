@@ -20,7 +20,7 @@ class Menu
       puts "Opção escolhida: #{option}"
       r = nil
       if option > 0 && option < 5
-        puts 'informe o valor da transação: '
+        puts 'Informe o valor da transação: '
         if option == 1 || option == 2
           dollar = gets.to_f
           real = Balance.dollar_to_real(dollar)
@@ -42,12 +42,12 @@ class Menu
           end
           puts "Valor a ser pago pela #{type} de BRL #{real}: USD #{dollar}"
         end
-        puts 'deseja confirmar a operação? [s/n]'
+        puts 'Deseja confirmar a operação? [s/n]'
         r = gets.chomp
         if r == 's'
           Balance.confirm_transaction(type, currency, dollar, real)
         else
-          puts 'operacao cancelada'
+          puts 'Operacao cancelada'
         end
       else
         print 'Opção invalida'

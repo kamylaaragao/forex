@@ -42,16 +42,16 @@ RSpec.describe 'command line interface integration test' do
 
       it 'cashier provides the number of USD to buy' do
         response = read_nth_line(stdout, 1)
-        expect(response).to include 'informe o valor da transação'
+        expect(response).to include 'Informe o valor da transação'
         response = user_input(stdout, stdin, '5')
         expect(response).to include 'BRL 16'
       end
 
       it 'cashier confirms the operation' do
         response = read_nth_line(stdout, 1)
-        expect(response).to include 'deseja confirmar a operação? [s/n]'
+        expect(response).to include 'Deseja confirmar a operação? [s/n]'
         response = user_input(stdout, stdin, 's')
-        expect(response).to include 'operacao confirmada!'
+        expect(response).to include 'Operacao confirmada!'
       end
     end
   end

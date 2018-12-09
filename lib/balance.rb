@@ -25,14 +25,14 @@ class Balance
     @balance_d -= dollar
     @balance_r += real
     @active_transaction = Transaction.new(type, currency, @price, dollar)
-    puts 'operacao confirmada!'
+    puts 'Operacao confirmada!'
   end
 
   def self.change_real(type, currency, dollar, real)
     @balance_d += dollar
     @balance_r -= real
     @active_transaction = Transaction.new(type, currency, @price, dollar)
-    puts 'operacao confirmada!'
+    puts 'Operacao confirmada!'
   end
 
   def self.confirm_transaction(type, currency, dollar, real)
@@ -53,7 +53,5 @@ class Balance
         puts 'Saldo insuficiente em caixa'
       end
     end
-    puts "real disponivel no caixa #{@balance_r}"
-    puts "dolar disponivel no caixa #{@balance_d} "
   end
 end
