@@ -14,7 +14,7 @@ class Menu
   end
 
   def self.start
-    Balance.open_balance
+    balance = Balance.new
     option = menu
     while option != 7
       puts "Opção escolhida: #{option}"
@@ -23,7 +23,7 @@ class Menu
         puts 'Informe o valor da transação: '
         if option == 1 || option == 2
           dollar = gets.to_f
-          real = Balance.dollar_to_real(dollar)
+          real = balance.dollar_to_real(dollar)
           currency = 'USD'
           if option == 1
             type = 'compra'
@@ -33,7 +33,7 @@ class Menu
           puts "Valor a ser pago pela #{type} de USD #{dollar}: BRL #{real}"
         elsif option == 3 || option == 4
           real = gets.to_f
-          dollar = Balance.real_to_dollar(real)
+          dollar = balance.real_to_dollar(real)
           currency = 'BRL'
           if option == 3
             type = 'compra'
@@ -45,7 +45,7 @@ class Menu
         puts 'Deseja confirmar a operação? [s/n]'
         r = gets.chomp
         if r == 's'
-          Balance.confirm_transaction(type, currency, dollar, real)
+          balance.confirm_transaction(type, currency, dollar, real)
         else
           puts 'Operacao cancelada'
         end
