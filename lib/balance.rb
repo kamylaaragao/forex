@@ -23,6 +23,10 @@ class Balance
     value / @price
   end
 
+  def to_s
+    "total USD no caixa: #{@balance_d}; total BRL no caixa: #{@balance_r}"
+  end
+
   def change_dollar(type, currency, dollar, real)
     @balance_d -= dollar
     @balance_r += real

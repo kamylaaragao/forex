@@ -53,6 +53,22 @@ RSpec.describe 'command line interface integration test' do
         response = user_input(stdout, stdin, 's')
         expect(response).to include 'Operacao confirmada!'
       end
+
+      it 'shows the transaction list' do
+        read_nth_line(stdout, 8)
+        response = user_input(stdout, stdin, '5')
+        expect(response).to include 'Opção escolhida: 5'
+        response = read_nth_line(stdout, 1)
+        expect(response).to include 'ID: 1; type: compra; currency: USD; total USD: 5.0; total BRL: 16.0'
+      end
+
+      it 'shows the balance' do
+        read_nth_line(stdout, 8)
+        response = user_input(stdout, stdin, '6')
+        expect(response).to include 'Opção escolhida: 6'
+        response = read_nth_line(stdout, 1)
+        expect(response).to include 'total USD no caixa: 95.0; total BRL no caixa: 416.0'
+      end
     end
   end
 
