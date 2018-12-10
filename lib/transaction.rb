@@ -17,7 +17,7 @@ class Transaction
   end
 
   def to_json
-    x = {:id => @id,  :type => @type, :currency => @currency, :price => @price, :total_usd => "#{@total_usd} \n"}
+    x = {:id => @id,  :type => @type, :currency => @currency, :price => @price, :total_usd => @total_usd}
     x.to_json
   end
 
