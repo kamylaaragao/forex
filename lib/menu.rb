@@ -60,9 +60,9 @@ class Menu
           puts 'Operacao cancelada'
         end
       elsif option == 5
-        puts balance.transactions
+        puts balance.transactions_table
       elsif option == 6
-        puts balance
+        puts balance.balance_table
       else
         print 'Opção invalida'
       end

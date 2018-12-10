@@ -1,4 +1,6 @@
-{"id":1,"type":"compra","currency":"USD","price":3.2,"total_usd":"5.0 \n"}\r
-{"id":2,"type":"compra","currency":"BRL","price":3.2,"total_usd":"1.5625 \n"}\r
 {"id":1,"type":"compra","currency":"USD","price":3.2,"total_usd":5.0}\r
 {"id":2,"type":"compra","currency":"BRL","price":3.2,"total_usd":1.5625}\r
+{"id":1,"type":"compra","currency":"USD","price":2.9,"total_usd":333.0}\r
+{"id":2,"type":"venda","currency":"USD","price":2.9,"total_usd":123.0}\r
+{"id":3,"type":"compra","currency":"BRL","price":2.9,"total_usd":157.24137931034483}\r
+{"id":4,"type":"venda","currency":"BRL","price":2.9,"total_usd":7.931034482758621}\r

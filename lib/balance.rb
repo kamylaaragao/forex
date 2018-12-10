@@ -1,4 +1,6 @@
 require_relative 'transaction'
+require 'rubygems'
+require 'terminal-table/import'
 
 class Balance
   attr_accessor :price, :balance_usd, :balance_brz, :transactions, :active_transaction, :transaction_count
@@ -57,6 +59,22 @@ class Balance
         change_dollar(type, currency, dollar, real)
       elsif type == 'compra' && real <= @balance_brz
         change_real(type, currency, dollar, real)
+      end
+    end
+  end
+
+  def balance_table
+    transac = table do |t|
+      t.headings = 'Cotação do dia', 'total USD no caixa', 'total BRL no caixa'
+      t << [@price, @balance_usd, @balance_brz]
+    end
+  end
+
+  def transactions_table
+    transac = table do |t|
+      t.headings = 'id', 'tipo', 'moeda', 'total em USD'
+      for i in @transactions
+        t << [i.id, i.type, i.currency, i.total_usd]
       end
     end
   end
