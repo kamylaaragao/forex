@@ -73,6 +73,46 @@ RSpec.describe 'command line interface integration test' do
       expect(response).to include 'Operacao confirmada!'
     end
 
+    it 'cashier chooses option 2' do
+      read_nth_line(stdout, 8)
+      response = user_input(stdout, stdin, '2')
+      expect(response).to include 'Opção escolhida: 2'
+    end
+
+    it 'cashier provides the number of USD to sell' do
+      response = read_nth_line(stdout, 1)
+      expect(response).to include 'Informe o valor da transação'
+      response = user_input(stdout, stdin, '5')
+      expect(response).to include 'BRL 16.0'
+    end
+
+    it 'cashier do not confirms the operation' do
+      response = read_nth_line(stdout, 1)
+      expect(response).to include 'Deseja confirmar a operação? [s/n]'
+      response = user_input(stdout, stdin, 'n')
+      expect(response).to include 'Operacao cancelada'
+    end
+
+    it 'cashier chooses option 4' do
+      read_nth_line(stdout, 8)
+      response = user_input(stdout, stdin, '4')
+      expect(response).to include 'Opção escolhida: 4'
+    end
+
+    it 'cashier provides the number of BRL to sell' do
+      response = read_nth_line(stdout, 1)
+      expect(response).to include 'Informe o valor da transação'
+      response = user_input(stdout, stdin, '50000')
+      expect(response).to include 'USD 15625.0'
+    end
+
+    it 'cashier confirms the operation' do
+      response = read_nth_line(stdout, 1)
+      expect(response).to include 'Deseja confirmar a operação? [s/n]'
+      response = user_input(stdout, stdin, 's')
+      expect(response).to include 'Saldo indisponivel em caixa'
+    end
+
     it 'shows the transaction list' do
       read_nth_line(stdout, 8)
       response = user_input(stdout, stdin, '5')

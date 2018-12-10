@@ -14,11 +14,17 @@ class Menu
   end
 
   def self.start
-    balance = Balance.new
+    puts 'Olá, por favor digite as informações abaixo'
+    puts 'Cotação do dólar em reais: '
+    price = gets.to_f
+    puts 'Dolares disponíveis no caixa: '
+    balance_usd = gets.to_f
+    puts 'Reais disponíveis no caixa: '
+    balance_brz = gets.to_f
+    balance = Balance.new(price, balance_usd, balance_brz)
     option = menu
     while option != 7
       puts "Opção escolhida: #{option}"
-      r = nil
       if option > 0 && option < 5
         puts 'Informe o valor da transação: '
         if option == 1 || option == 2
@@ -45,7 +51,11 @@ class Menu
         puts 'Deseja confirmar a operação? [s/n]'
         r = gets.chomp
         if r == 's'
-          balance.confirm_transaction(type, currency, dollar, real)
+          if balance.confirm_transaction(type, currency, dollar, real)
+            puts 'Operacao confirmada!'
+          else
+            puts 'Saldo indisponivel em caixa'
+          end
         else
           puts 'Operacao cancelada'
         end
