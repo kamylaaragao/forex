@@ -1,5 +1,6 @@
 require_relative 'Cashier'
 
+
 class Menu
 
   BUY_DOLLAR = 1

@@ -3,13 +3,12 @@ require 'rubygems'
 require 'terminal-table/import'
 
 class Cashier
-  attr_accessor :price, :balance_usd, :balance_brl, :transactions, :active_transaction, :transaction_count
+  attr_accessor :price, :balance_usd, :balance_brl, :transactions, :active_transaction
 
   def initialize(price, balance_usd, balance_brl)
     @price = price
     @balance_usd = balance_usd
     @balance_brl = balance_brl
-    @transaction_count = 0
     @transactions = []
   end
 
@@ -30,9 +29,19 @@ class Cashier
     false
   end
 
-  def create_transaction(type, currency, dollar, real)
-    @active_transaction = Transaction.new(type, currency, @price, dollar, @transaction_count)
-    @transactions << @active_transaction
+  def select_transactions
+    db = SQLite3::Database.open 'data/cambio.db'
+    db.execute('SELECT * FROM TRANSACTIONS') do |row|
+      @active_transaction = Transaction.new(row[0].to_i, row[1], row[2], row[3].to_f, row[4].to_f)
+      @transactions << @active_transaction
+    end
+    db.close
+    @transactions
+  end
+
+  def create_transaction(type, currency, dollar)
+    @active_transaction =Transaction.new(type, currency, @price, dollar)
+    @active_transaction.to_db
     true
   end
 
@@ -40,8 +49,7 @@ class Cashier
     if real <= @balance_usd
       @balance_usd -= dollar
       @balance_brl += real
-      @transaction_count += 1
-      create_transaction(type, currency, dollar, real)
+      create_transaction(type, currency, dollar)
     else
       false
     end
@@ -51,8 +59,7 @@ class Cashier
     if real <= @balance_brl
       @balance_usd += dollar
       @balance_brl -= real
-      @transaction_count += 1
-      create_transaction(type, currency, dollar, real)
+      create_transaction(type, currency, dollar)
     else
       false
     end
@@ -66,10 +73,11 @@ class Cashier
   end
 
   def transactions_table
+    select_transactions
     transac = table do |t|
-      t.headings = 'id', 'tipo', 'moeda', 'total em USD'
+      t.headings = 'id', 'tipo', 'moeda', 'cotação USD/BRL','total em USD'
       for i in @transactions
-        t << [i.id, i.type, i.currency, i.total_usd]
+        t << [i.id, i.type, i.currency, i.price, i.total_usd]
       end
     end
   end

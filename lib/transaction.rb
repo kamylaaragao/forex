@@ -1,26 +1,21 @@
 require 'json'
+require 'sqlite3'
 
 class Transaction
   attr_accessor :id, :type, :currency, :price, :total_usd
 
-  def initialize(type, currency, price, total_usd, id)
+  def initialize(id = nil, type, currency, price, total_usd)
     @type = type
     @currency = currency
     @price = price
     @total_usd = total_usd
     @id = id
-    save_to_file
   end
 
-  def to_json
-    x = {:id => @id,  :type => @type, :currency => @currency, :price => @price, :total_usd => @total_usd}
-    x.to_json
-  end
-
-  def save_to_file
-    File.open('data/transaction.json', 'a') do |f|
-      f.print to_json
-      f.puts '\r'
-    end
+  def to_db
+    db = SQLite3::Database.open "data/cambio.db"
+    db.execute('INSERT INTO transactions(type, currency, price, total) VALUES (?, ?, ?, ?)',
+    @type, @currency, @price, @total_usd)
+    db.close
   end
 end
