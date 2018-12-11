@@ -1,15 +1,24 @@
 require_relative 'Cashier'
 
 class Menu
+
+  BUY_DOLLAR = 1
+  SELL_DOLLAR = 2
+  BUY_REAL = 3
+  SELL_REAL = 4
+  SHOW_TRANSACTIONS = 5
+  SHOW_BALANCE = 6
+  CLOSE = 7
+
   def self.menu
     puts 'Escolha uma opção no menu:'
-    puts '[1] Comprar dólares'
-    puts '[2] Vender dólares'
-    puts '[3] Comprar reais'
-    puts '[4] Vender reais'
-    puts '[5] Ver operações do dia'
-    puts '[6] Ver situação do caixa'
-    puts '[7] Sair'
+    puts "[#{BUY_DOLLAR}] Comprar dólares"
+    puts "[#{SELL_DOLLAR}] Vender dólares"
+    puts "[#{BUY_REAL}] Comprar reais"
+    puts "[#{SELL_REAL}] Vender reais"
+    puts "[#{SHOW_TRANSACTIONS}] Ver operações do dia"
+    puts "[#{SHOW_BALANCE}] Ver situação do caixa"
+    puts "[#{CLOSE}] Sair"
     gets.to_i
   end
 
@@ -30,13 +39,13 @@ class Menu
         value = gets.to_f
         puts cashier.payment_to_s(option, value)
         if cashier.confirm?
-          if option == 1
+          if option == BUY_DOLLAR
             a = cashier.buy_usd_sell_brl('compra', 'USD', value, (value* price))
-          elsif option == 2
+          elsif option == SELL_DOLLAR
             a = cashier.buy_brl_sell_usd('venda', 'USD', value, (value * price))
-          elsif option == 3
+          elsif option == BUY_REAL
             a = cashier.buy_brl_sell_usd('compra', 'BRL', (value / price), value)
-          elsif option == 4
+          elsif option == SELL_REAL
             a = cashier.buy_usd_sell_brl('venda', 'BRL', (value / price), value)
           end
           if a == true
@@ -47,9 +56,9 @@ class Menu
         else
           puts 'Operacao cancelada'
         end
-      elsif option == 5
+      elsif option == SHOW_TRANSACTIONS
         puts cashier.transactions_table
-      elsif option == 6
+      elsif option == SHOW_BALANCE
         puts cashier.balance_table
       else
         print 'Opção invalida'

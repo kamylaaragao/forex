@@ -14,10 +14,10 @@ class Cashier
   end
 
   def payment_to_s(option, value)
-    if option == 1 || option == 2
+    if option == Menu::BUY_DOLLAR|| option == Menu::SELL_DOLLAR
       real = value * @price
       "Valor a ser pago: BRL #{real}"
-    elsif option == 3 || option == 4
+    elsif option == Menu::BUY_REAL || option == Menu::SELL_REAL
       dollar = value / @price
       "Valor a ser pago: USD #{dollar}"
     end
