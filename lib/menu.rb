@@ -1,4 +1,4 @@
-require_relative 'balance'
+require_relative 'Cashier'
 
 class Menu
   def self.menu
@@ -21,37 +21,25 @@ class Menu
     balance_usd = gets.to_f
     puts 'Reais disponíveis no caixa: '
     balance_brz = gets.to_f
-    balance = Balance.new(price, balance_usd, balance_brz)
+    cashier = Cashier.new(price, balance_usd, balance_brz)
     option = menu
     while option != 7
       puts "Opção escolhida: #{option}"
       if option > 0 && option < 5
         puts 'Informe o valor da transação: '
-        if option == 1 || option == 2
-          dollar = gets.to_f
-          real = balance.dollar_to_real(dollar)
-          currency = 'USD'
+        value = gets.to_f
+        puts cashier.payment_to_s(option, value)
+        if cashier.confirm?
           if option == 1
-            type = 'compra'
+            a = cashier.buy_usd_sell_brz('compra', 'USD', value, (value* price))
           elsif option == 2
-            type = 'venda'
-          end
-          puts "Valor a ser pago pela #{type} de USD #{dollar}: BRL #{real}"
-        elsif option == 3 || option == 4
-          real = gets.to_f
-          dollar = balance.real_to_dollar(real)
-          currency = 'BRL'
-          if option == 3
-            type = 'compra'
+            a = cashier.buy_brz_sell_usd('venda', 'USD', value, (value * price))
+          elsif option == 3
+            a = cashier.buy_brz_sell_usd('compra', 'BRL', (value / price), value)
           elsif option == 4
-            type = 'venda'
+            a = cashier.buy_usd_sell_brz('venda', 'BRL', (value / price), value)
           end
-          puts "Valor a ser pago pela #{type} de BRL #{real}: USD #{dollar}"
-        end
-        puts 'Deseja confirmar a operação? [s/n]'
-        r = gets.chomp
-        if r == 's'
-          if balance.confirm_transaction(type, currency, dollar, real)
+          if a == true
             puts 'Operacao confirmada!'
           else
             puts 'Saldo indisponivel em caixa'
@@ -60,9 +48,9 @@ class Menu
           puts 'Operacao cancelada'
         end
       elsif option == 5
-        puts balance.transactions_table
+        puts cashier.transactions_table
       elsif option == 6
-        puts balance.balance_table
+        puts cashier.balance_table
       else
         print 'Opção invalida'
       end

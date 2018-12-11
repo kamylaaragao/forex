@@ -12,10 +12,6 @@ class Transaction
     save_to_file
   end
 
-  def to_s
-    "ID: #{@id}; type: #{@type}; currency: #{@currency}; total USD: #{@total_usd}; total BRL: #{@total_usd * @price}"
-  end
-
   def to_json
     x = {:id => @id,  :type => @type, :currency => @currency, :price => @price, :total_usd => @total_usd}
     x.to_json
