@@ -3,12 +3,12 @@ require 'rubygems'
 require 'terminal-table/import'
 
 class Cashier
-  attr_accessor :price, :balance_usd, :balance_brz, :transactions, :active_transaction, :transaction_count
+  attr_accessor :price, :balance_usd, :balance_brl, :transactions, :active_transaction, :transaction_count
 
-  def initialize(price, balance_usd, balance_brz)
+  def initialize(price, balance_usd, balance_brl)
     @price = price
     @balance_usd = balance_usd
-    @balance_brz = balance_brz
+    @balance_brl = balance_brl
     @transaction_count = 0
     @transactions = []
   end
@@ -36,10 +36,10 @@ class Cashier
     r = true
   end
 
-  def buy_usd_sell_brz(type, currency, dollar, real)
+  def buy_usd_sell_brl(type, currency, dollar, real)
     if real <= @balance_usd
       @balance_usd -= dollar
-      @balance_brz += real
+      @balance_brl += real
       @transaction_count += 1
       create_transaction(type, currency, dollar, real)
     else
@@ -47,10 +47,10 @@ class Cashier
     end
   end
 
-  def buy_brz_sell_usd(type, currency, dollar, real)
-    if real <= @balance_brz
+  def buy_brl_sell_usd(type, currency, dollar, real)
+    if real <= @balance_brl
       @balance_usd += dollar
-      @balance_brz -= real
+      @balance_brl -= real
       @transaction_count += 1
       create_transaction(type, currency, dollar, real)
     else
@@ -61,7 +61,7 @@ class Cashier
   def balance_table
     transac = table do |t|
       t.headings = 'Cotação do dia', 'total USD no caixa', 'total BRL no caixa'
-      t << [@price, @balance_usd, @balance_brz]
+      t << [@price, @balance_usd, @balance_brl]
     end
   end
 
