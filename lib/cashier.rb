@@ -33,7 +33,7 @@ class Cashier
   def create_transaction(type, currency, dollar, real)
     @active_transaction = Transaction.new(type, currency, @price, dollar, @transaction_count)
     @transactions << @active_transaction
-    r = true
+    true
   end
 
   def buy_usd_sell_brl(type, currency, dollar, real)
@@ -43,7 +43,7 @@ class Cashier
       @transaction_count += 1
       create_transaction(type, currency, dollar, real)
     else
-      r = false
+      false
     end
   end
 
@@ -54,7 +54,7 @@ class Cashier
       @transaction_count += 1
       create_transaction(type, currency, dollar, real)
     else
-      r = false
+      false
     end
   end
 
