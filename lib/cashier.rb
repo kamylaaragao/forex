@@ -31,21 +31,10 @@ class Cashier
     end
   end
 
-  def select_transactions
-    @transactions = []
-    db = SQLite3::Database.open 'data/cambio.db'
-    db.execute('select * from transactions') do |row|
-      @active_transaction = Transaction.new(row[0].to_i, row[1], row[2], row[3].to_f, row[4].to_f)
-      @transactions << @active_transaction
-    end
-    db.close
-    @transactions
-  end
-
   def day_transactions
     @transactions = []
     db = SQLite3::Database.open 'data/cambio.db'
-    db.execute('select * from transactions') do |row|
+    db.execute('select * from transactions where cashier_id = ?', @cashier_id) do |row|
       @active_transaction = Transaction.new(row[0].to_i, row[1], row[2], row[3].to_f, row[4].to_f)
       @transactions << @active_transaction
     end
@@ -104,7 +93,7 @@ class Cashier
   end
 
   def transactions_table
-    select_transactions
+    day_transactions
     transac = table do |t|
       t.headings = 'ID', 'Tipo', 'Moeda', 'Cotação', 'Total em USD'
       for i in @transactions
