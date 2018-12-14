@@ -2,7 +2,6 @@ require_relative 'Cashier'
 
 
 class Menu
-
   BUY_DOLLAR = 1
   SELL_DOLLAR = 2
   BUY_REAL = 3
@@ -23,15 +22,39 @@ class Menu
     gets.to_i
   end
 
-  def self.start
-    puts 'Olá, por favor digite as informações abaixo'
+  def self.select_cashier(date)
+    db = SQLite3::Database.open 'data/cambio.db'
+    cashier = nil
+    db.execute('select * from cashier where (date = ?)', date) do |row|
+      cashier = Cashier.new(row[0].to_i, row[1], row[2].to_f, row[3].to_f, row[4].to_f)
+    end
+    db.close
+    cashier
+  end
+
+  def self.get_cashier_information
     puts 'Cotação do dólar em reais: '
     price = gets.to_f
     puts 'Dolares disponíveis no caixa: '
     balance_usd = gets.to_f
     puts 'Reais disponíveis no caixa: '
     balance_brl = gets.to_f
-    cashier = Cashier.new(price, balance_usd, balance_brl)
+    cashier = Cashier.new(balance_usd, balance_brl, price)
+  end
+
+  def self.start
+    puts 'Olá, seja bem vindo!'
+    cashier = select_cashier(Date.today.to_s)
+    if cashier == nil
+      cashier = get_cashier_information
+      cashier.to_db
+    else
+      puts cashier.balance_table
+      if cashier.update?
+        cashier = get_cashier_information
+        cashier.update_db
+      end
+    end
     option = menu
     while option != 7
       puts "Opção escolhida: #{option}"
@@ -39,15 +62,15 @@ class Menu
         puts 'Informe o valor da transação: '
         value = gets.to_f
         puts cashier.payment_to_s(option, value)
-        if cashier.confirm?
+        if Transaction.confirm?
           if option == BUY_DOLLAR
-            a = cashier.buy_usd_sell_brl('compra', 'USD', value, (value* price))
+            a = cashier.buy_usd_sell_brl('compra', 'USD', value, (value * cashier.price))
           elsif option == SELL_DOLLAR
-            a = cashier.buy_brl_sell_usd('venda', 'USD', value, (value * price))
+            a = cashier.buy_brl_sell_usd('venda', 'USD', value, (value * cashier.price))
           elsif option == BUY_REAL
-            a = cashier.buy_brl_sell_usd('compra', 'BRL', (value / price), value)
+            a = cashier.buy_brl_sell_usd('compra', 'BRL', (value / cashier.price), value)
           elsif option == SELL_REAL
-            a = cashier.buy_usd_sell_brl('venda', 'BRL', (value / price), value)
+            a = cashier.buy_usd_sell_brl('venda', 'BRL', (value / cashier.price), value)
           end
           if a == true
             puts 'Operacao confirmada!'

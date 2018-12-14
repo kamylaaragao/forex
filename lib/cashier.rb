@@ -3,13 +3,21 @@ require 'rubygems'
 require 'terminal-table/import'
 
 class Cashier
-  attr_accessor :price, :balance_usd, :balance_brl, :transactions, :active_transaction
+  attr_accessor :cashier_id, :price, :balance_usd, :balance_brl, :date, :transactions, :active_transaction
 
-  def initialize(price, balance_usd, balance_brl)
+  def initialize(cashier_id = nil, date = Date.today.to_s, balance_usd, balance_brl, price)
+    @cashier_id = cashier_id
     @price = price
     @balance_usd = balance_usd
     @balance_brl = balance_brl
-    @transactions = []
+    @date = date
+  end
+
+  def update?
+    puts 'Deseja atualizar as informações? [s/n]'
+    r = gets.chomp
+    return true if r == 's'
+    false
   end
 
   def payment_to_s(option, value)
@@ -22,16 +30,10 @@ class Cashier
     end
   end
 
-  def confirm?
-    puts 'Deseja confirmar a operação? [s/n]'
-    r = gets.chomp
-    return true if r == 's'
-    false
-  end
-
   def select_transactions
+    @transactions = []
     db = SQLite3::Database.open 'data/cambio.db'
-    db.execute('SELECT * FROM TRANSACTIONS') do |row|
+    db.execute('select * from transactions') do |row|
       @active_transaction = Transaction.new(row[0].to_i, row[1], row[2], row[3].to_f, row[4].to_f)
       @transactions << @active_transaction
     end
@@ -39,9 +41,16 @@ class Cashier
     @transactions
   end
 
+  def update_db
+    db = SQLite3::Database.open "data/cambio.db"
+    db.execute('update cashier set balance_usd = ?, balance_brl = ?, price = ? where date = ?',
+    @balance_usd, @balance_brl, @price, @date)
+    db.close
+  end
+
   def create_transaction(type, currency, dollar)
     @active_transaction =Transaction.new(type, currency, @price, dollar)
-    @active_transaction.to_db
+    @active_transaction.to_db(@cashier_id)
     true
   end
 
@@ -49,6 +58,7 @@ class Cashier
     if real <= @balance_usd
       @balance_usd -= dollar
       @balance_brl += real
+      update_db
       create_transaction(type, currency, dollar)
     else
       false
@@ -59,25 +69,35 @@ class Cashier
     if real <= @balance_brl
       @balance_usd += dollar
       @balance_brl -= real
+      update_db
       create_transaction(type, currency, dollar)
     else
       false
     end
   end
 
+  def to_db
+    db = SQLite3::Database.open "data/cambio.db"
+    db.execute('insert into cashier (date, balance_usd, balance_brl, price) values (?, ?, ?, ?)',
+    @date, @balance_usd, @balance_brl, @price)
+    @cashier_id = db.execute('select cashier_id from cashier where (date = ?)', @date)
+    db.close
+  end
+
   def balance_table
-    transac = table do |t|
-      t.headings = 'Cotação do dia', 'total USD no caixa', 'total BRL no caixa'
-      t << [@price, @balance_usd, @balance_brl]
+    balance = table do |t|
+      t.headings = 'Data', 'Cotação do dia', 'Total USD no caixa', 'Total BRL no caixa'
+      t << [@date, @price, @balance_usd, @balance_brl]
     end
   end
 
   def transactions_table
     select_transactions
     transac = table do |t|
-      t.headings = 'id', 'tipo', 'moeda', 'cotação USD/BRL','total em USD'
+      t.headings = 'ID', 'Tipo', 'Moeda', 'Cotação', 'Total em USD'
       for i in @transactions
-        t << [i.id, i.type, i.currency, i.price, i.total_usd]
+        t << [i.transaction_id, i.type, i.currency, i.price, i.total_usd]
+        puts i.transaction_id
       end
     end
   end

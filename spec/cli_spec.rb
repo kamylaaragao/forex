@@ -10,7 +10,9 @@ def user_input(stdout, stdin, input)
   read_nth_line(stdout, 2)
 end
 
+=begin
 RSpec.describe 'command line interface integration test' do
+
   PTY.spawn('./cli') do |stdout, stdin|
     response = read_nth_line(stdout, 2)
 
@@ -113,4 +115,7 @@ RSpec.describe 'command line interface integration test' do
       expect(response).to include 'Saldo indisponivel em caixa'
     end
   end
+
+
 end
+=end
