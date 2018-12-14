@@ -26,20 +26,22 @@ class Menu
     db = SQLite3::Database.open 'data/cambio.db'
     cashier = nil
     db.execute('select * from cashier where (date = ?)', date) do |row|
-      cashier = Cashier.new(row[0].to_i, row[1], row[2].to_f, row[3].to_f, row[4].to_f)
+      cashier = Cashier.new(row[0].to_i, row[1], row[2].to_f, row[3].to_f, row[4].to_f, row[5])
     end
     db.close
     cashier
   end
 
   def self.get_cashier_information
+    puts 'Nome do operador de caixa: '
+    name = gets
     puts 'Cotação do dólar em reais: '
     price = gets.to_f
     puts 'Dolares disponíveis no caixa: '
     balance_usd = gets.to_f
     puts 'Reais disponíveis no caixa: '
     balance_brl = gets.to_f
-    cashier = Cashier.new(balance_usd, balance_brl, price)
+    cashier = Cashier.new(balance_usd, balance_brl, price, name)
   end
 
   def self.start
