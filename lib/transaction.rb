@@ -13,7 +13,6 @@ class Transaction
   end
 
   def to_db (cashier_id)
-    puts cashier_id
     db = SQLite3::Database.open "data/cambio.db"
     db.execute('INSERT INTO transactions(type, currency, price, total, cashier_id) VALUES (?, ?, ?, ?, ?)',
     @type, @currency, @price, @total_usd, cashier_id)
