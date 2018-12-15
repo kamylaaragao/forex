@@ -1,4 +1,3 @@
-require 'json'
 require 'sqlite3'
 
 class Transaction

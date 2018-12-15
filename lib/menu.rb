@@ -1,6 +1,5 @@
 require_relative 'Cashier'
 
-
 class Menu
   BUY_DOLLAR = 1
   SELL_DOLLAR = 2
@@ -58,9 +57,9 @@ class Menu
       end
     end
     option = menu
-    while option != 7
+    while option != CLOSE
       puts "Opção escolhida: #{option}"
-      if option > 0 && option < 5
+      if option >= BUY_DOLLAR && option <= SELL_REAL
         puts 'Informe o valor da transação: '
         value = gets.to_f
         puts cashier.payment_to_s(option, value)
